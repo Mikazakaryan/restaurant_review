@@ -1,4 +1,6 @@
+const cors = require('cors');
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const routers = require('./routers');
 
@@ -24,6 +26,8 @@ const errorMiddleware = (err, _req, res, _next) => {
 
 try {
   app
+    .use(cors())
+    .use(bodyParser.json())
     .get('/isalive', (_req, res) => {
       res.sendStatus(200);
     })
