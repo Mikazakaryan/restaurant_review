@@ -1,0 +1,34 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "arangojs": "^6.14.0",
+    "axios": "^0.19.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "json-api-serializer": "^2.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "nodemon": "^2.0.2",
+    "prettier": "^2.0.2"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "index.js",
+      "package.json",
+      "./src",
+      ".babelrc"
+    ]
+  }
+}
