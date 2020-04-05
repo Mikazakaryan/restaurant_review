@@ -1,0 +1,19 @@
+{
+  "name": "michael-zakaryan",
+  "version": "1.0.0",
+  "description": "- backend is simple node js app serve as a proxy - you need to run `yarn start`",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@git.toptal.com:screening/michael-zakaryan.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^5.1.0"
+  },
+  "scripts": {
+    "bootstrap": "concurrently -n \"DB-server,user-service,restaurant-service\" \"foxx server set toptal http://localhost:8529/ --database toptal\" \"cd user_foxx && foxx install --server toptal --database toptal /user\" \"foxx install --server toptal --database toptal /restaurant\"",
+    "compose:all": "concurrently -n \"backend,frontend,\" \"cd backend && yarn start\" \"cd frontend && yarn start\""
+  }
+}

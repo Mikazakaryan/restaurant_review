@@ -32,6 +32,7 @@ try {
       res.sendStatus(200);
     })
     .use('/user', routers.userRouter)
+    .use('/restaurant', routers.restaurantRouter)
     .use('*', routers.unknownRouter)
     .use(errorMiddleware)
     .listen(

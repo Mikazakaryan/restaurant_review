@@ -17,16 +17,19 @@ export default {
   effects: dispatch => ({
     async fetchUser() {},
     async login({ username, password }) {
-      const user = await userApi.login({ username, password });
+      const { user: userRes } = await userApi.login({ username, password });
+      const user = Object.values(userRes)[0];
       localStorage.setObject('user', user);
 
       this.setUser(user);
     },
+
     async signup(props) {
       const user = await userApi.signup(props);
 
       this.setUser(user);
     },
+
     async logOut() {
       localStorage.clear();
 

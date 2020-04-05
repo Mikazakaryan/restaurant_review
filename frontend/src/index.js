@@ -60,7 +60,7 @@ const RouterWrapper = () => (
     <Layout>
       <Switch>
         <Route exact path="/" component={Pages.Auth} />
-        <ProtectedRoute exact path="/home" component={Pages.Home} />
+        <ProtectedRoute exact path="/restaurant" component={Pages.Restaurant} />
       </Switch>
     </Layout>
   </Router>

@@ -74,16 +74,3 @@ router
   .response(joi.object().required(), "user collection")
   .summary("signup user")
   .description("signup user");
-
-router
-  .get("/:id", (req, res) => {
-    const { id } = req.pathParams;
-    const userKey = `users/${id}`;
-
-    const user = query`RETURN DOCUMENT(${userKey})`.toArray()[0];
-
-    res.send(user);
-  })
-  .response(joi.object().required(), "user collection")
-  .summary("get user by id")
-  .description("get user by id");

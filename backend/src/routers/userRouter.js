@@ -67,15 +67,4 @@ router.post('/signup', async (req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { data: userObj } = await axios.get(`${DB_HOST}/user/${id}`);
-    const serializedUser = Serializer.serialize('user', userObj);
-    res.status(200).json(serializedUser);
-  } catch (err) {
-    next(err);
-  }
-});
-
 module.exports = router;
