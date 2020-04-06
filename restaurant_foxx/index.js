@@ -1,12 +1,41 @@
 "use strict";
 
 const joi = require("joi");
+const db = require("@arangodb").db;
 const query = require("@arangodb").query;
 const createRouter = require("@arangodb/foxx/router");
 
 const router = createRouter();
 
 module.context.use(router);
+
+const getRestaurants = (userId) =>
+  query`    
+    FOR restaurant IN restaurants
+      LET ratings =  (
+        FOR user, vote IN 1..1 INBOUND restaurant hasRated
+        RETURN vote.rating
+      )
+
+      RETURN merge(restaurant, {
+        isRated: HAS(
+          FIRST(
+            FOR vote, edge IN 1..1 INBOUND restaurant hasRated
+            FILTER edge._from == ${userId}  
+            RETURN edge   
+          ), 
+        '_id'),
+        lastRate: FIRST(
+          FOR user, vote IN 1..1 INBOUND restaurant hasRated
+          SORT vote.date DESC
+          LIMIT 1
+          RETURN vote
+        ),
+        lowestRate: LAST(ratings),
+        highestRate: FIRST(ratings),
+        rating: SUM(ratings) / LENGTH(ratings)
+      })
+    `.toArray();
 
 router
   .post("/rate", (req, res) => {
@@ -15,33 +44,15 @@ router
     const userId = `users/${userKey}`;
     const restaurantId = `restaurants/${restaurantKey}`;
 
-    query`
-      INSERT { 
-        date: ${date},
-        _from: ${userId},
-        rating: ${rating},
-        comment: ${comment},
-        _to: ${restaurantId}
-       } INTO hasRated
-    `;
+    db._collection("hasRated").insert({
+      _from: userId,
+      rating: rating,
+      comment: comment,
+      _to: restaurantId,
+      date: new Date(date),
+    });
 
-    const restaurants = query`    
-      FOR restaurant IN restaurants
-        RETURN merge(restaurant, {
-          isRated: HAS(
-            FIRST(
-              FOR vote, edge IN 1..1 INBOUND restaurant hasRated
-              FILTER edge._from == ${userId}  
-              RETURN edge   
-            ), 
-          '_id'),
-          rating: FIRST(
-            FOR user, vote IN 1..1 INBOUND restaurant hasRated
-              COLLECT rating = vote.rating
-              RETURN rating
-          )
-        })
-    `.toArray();
+    const restaurants = getRestaurants(userId);
 
     res.send(restaurants);
   })
@@ -66,23 +77,7 @@ router
     const { userKey } = req.body;
     const userId = `users/${userKey}`;
 
-    const restaurants = query`  
-      FOR restaurant IN restaurants
-        RETURN merge(restaurant, {
-          isRated: HAS(
-            FIRST(
-              FOR vote, edge IN 1..1 INBOUND restaurant hasRated
-              FILTER edge._from == ${userId}  
-              RETURN edge   
-            ), 
-          '_id'),
-          rating: FIRST(
-            FOR user, vote IN 1..1 INBOUND restaurant hasRated
-              COLLECT rating = vote.rating
-              RETURN rating
-          )
-        })
-    `.toArray();
+    const restaurants = getRestaurants(userId);
 
     res.send(restaurants);
   })

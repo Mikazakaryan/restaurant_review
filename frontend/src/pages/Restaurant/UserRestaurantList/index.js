@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import UserTableList from './UserTableList';
-import UserRateDialog from './UserRateDialog';
+import TableList from './TableList';
+import RateDialog from './RateDialog';
 
 const defaultFeedback = {
   rating: 0,
@@ -10,13 +10,16 @@ const defaultFeedback = {
 };
 
 const UserRestaurantList = ({
+  rates,
   userKey,
   classes,
   rateRestaurant,
   restaurantsList,
 }) => {
+  const [lastReviewId, setLastReviewId] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [feedback, setFeedback] = useState(defaultFeedback);
+  const [isLastRateOpen, setIsLastRateOpen] = useState(false);
   const [restaurantToRate, setRestaurantToRate] = useState({});
 
   const closeDialog = () => {
@@ -25,9 +28,27 @@ const UserRestaurantList = ({
     setFeedback(defaultFeedback);
   };
 
+  const closeLastRateDialog = () => {
+    setLastReviewId('');
+    setIsLastRateOpen(false);
+  };
+
   return (
     <>
-      <UserRateDialog
+      {lastReviewId && (
+        <RateDialog
+          {...{
+            userKey,
+            classes,
+            readOnly: true,
+            isDialogOpen: isLastRateOpen,
+            closeDialog: closeLastRateDialog,
+            restaurantToRate: rates[lastReviewId],
+          }}
+        />
+      )}
+
+      <RateDialog
         {...{
           userKey,
           classes,
@@ -39,11 +60,12 @@ const UserRestaurantList = ({
           restaurantToRate,
         }}
       />
-      <UserTableList
+      <TableList
         {...{
-          isDialogOpen,
+          setLastReviewId,
           setIsDialogOpen,
           restaurantsList,
+          setIsLastRateOpen,
           setRestaurantToRate,
         }}
       />

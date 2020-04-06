@@ -2,6 +2,7 @@ import restaurantsApi from '../../apiProviders/restaurants';
 
 const defaultState = {
   list: {},
+  rates: {},
 };
 
 export default {
@@ -11,20 +12,28 @@ export default {
       ...state,
       list,
     }),
+    setRates: (state, rates) => ({
+      ...state,
+      rates,
+    }),
     clearState: () => ({ ...defaultState }),
   },
   effects: dispatch => ({
     async fetchAllRestaurants({ userKey }) {
-      const { userRestaurantList } = await restaurantsApi.fetchAll({ userKey });
+      const { userRestaurantList, rate } = await restaurantsApi.fetchAll({
+        userKey,
+      });
+      this.setRates(rate);
       this.setList(userRestaurantList);
     },
 
     async rateRestaurant({ userKey, feedback, restaurantId }) {
-      const { userRestaurantList } = await restaurantsApi.rateRestaurant({
+      const { userRestaurantList, rate } = await restaurantsApi.rateRestaurant({
         feedback,
         userKey,
         restaurantId,
       });
+      this.setRates(rate);
       this.setList(userRestaurantList);
     },
   }),

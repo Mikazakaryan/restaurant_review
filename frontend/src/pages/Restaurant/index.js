@@ -6,9 +6,10 @@ import UserRestaurantList from './UserRestaurantList';
 
 const Restaurant = ({
   user,
-  fetchAllRestaurants,
+  rates,
   rateRestaurant,
   restaurantsList,
+  fetchAllRestaurants,
 }) => {
   const classes = useStyles();
   const userKey = user.id;
@@ -24,6 +25,7 @@ const Restaurant = ({
     if (isUser)
       return (
         <UserRestaurantList
+          rates={rates}
           classes={classes}
           userKey={userKey}
           rateRestaurant={rateRestaurant}
@@ -37,9 +39,10 @@ const Restaurant = ({
 
 const mapState = ({
   user: { user },
-  restaurants: { list: restaurantsList },
+  restaurants: { list: restaurantsList, rates },
 }) => ({
   user,
+  rates,
   restaurantsList,
 });
 

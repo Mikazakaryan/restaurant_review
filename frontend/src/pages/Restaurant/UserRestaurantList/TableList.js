@@ -1,3 +1,4 @@
+import get from 'lodash/get';
 import React, { forwardRef } from 'react';
 import MaterialTable from 'material-table';
 import Rating from '@material-ui/lab/Rating';
@@ -9,14 +10,20 @@ const tableIcons = {
 };
 
 const UserTableList = ({
-  isDialogOpen,
+  setLastReviewId,
   setIsDialogOpen,
   restaurantsList,
+  setIsLastRateOpen,
   setRestaurantToRate,
 }) => {
   const openRateModal = id => () => {
-    setIsDialogOpen(!isDialogOpen);
+    setIsDialogOpen(true);
     setRestaurantToRate(restaurantsList[id]);
+  };
+
+  const openLastRateModal = id => () => {
+    setLastReviewId(id);
+    setIsLastRateOpen(true);
   };
 
   return (
@@ -35,6 +42,47 @@ const UserTableList = ({
               value={dowData.attributes.rating}
             />
           ),
+        },
+        {
+          title: 'Highest Rate',
+          render: dowData => (
+            <Rating
+              readOnly
+              precision={0.1}
+              value={dowData.attributes.highestRate}
+            />
+          ),
+        },
+        {
+          title: 'Lowest Rate',
+          render: dowData => (
+            <Rating
+              readOnly
+              precision={0.1}
+              value={dowData.attributes.lowestRate}
+            />
+          ),
+        },
+        {
+          title: 'Last Review',
+          render: rowData => {
+            const id = get(rowData, [
+              'relationships',
+              'lastRate',
+              'data',
+              'id',
+            ]);
+            return (
+              <Button
+                color="primary"
+                disabled={!id}
+                variant="contained"
+                onClick={openLastRateModal(id)}
+              >
+                read
+              </Button>
+            );
+          },
         },
         {
           title: 'Rate',

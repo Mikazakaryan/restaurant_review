@@ -14,7 +14,10 @@ const fetchAll = async ({ userKey }) => {
 
   const normalizedUser = normalize(res.data);
 
-  return { userRestaurantList: normalizedUser.userRestaurantList || {} };
+  return {
+    rate: normalizedUser.rate || {},
+    userRestaurantList: normalizedUser.userRestaurantList || {},
+  };
 };
 
 const rateRestaurant = async ({ feedback, userKey, restaurantId }) => {
@@ -28,7 +31,10 @@ const rateRestaurant = async ({ feedback, userKey, restaurantId }) => {
   });
   const normalizedUser = normalize(res.data);
 
-  return { userRestaurantList: normalizedUser.userRestaurantList || {} };
+  return {
+    rate: normalizedUser.rate || {},
+    userRestaurantList: normalizedUser.userRestaurantList || {},
+  };
 };
 
 export default {

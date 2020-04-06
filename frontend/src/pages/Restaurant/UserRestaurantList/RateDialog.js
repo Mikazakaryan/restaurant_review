@@ -3,6 +3,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -14,6 +15,7 @@ import {
 const UserRateDialog = ({
   classes,
   userKey,
+  readOnly,
   feedback,
   setFeedback,
   closeDialog,
@@ -47,44 +49,64 @@ const UserRateDialog = ({
               <div className={classes.dateAndRating}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
+                    readOnly={readOnly}
                     label="Date"
                     disableToolbar
                     margin="normal"
                     variant="inline"
                     format="MM/dd/yyyy"
-                    value={feedback.date}
                     onChange={handleFeedbackChange('date')}
+                    value={
+                      readOnly
+                        ? restaurantToRate.attributes.date
+                        : feedback.date
+                    }
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
                   />
                 </MuiPickersUtilsProvider>
                 <Rating
+                  readOnly={readOnly}
                   name="Rating"
-                  value={feedback.rating}
+                  value={
+                    readOnly
+                      ? restaurantToRate.attributes.rating
+                      : feedback.rating
+                  }
                   onChange={({ target: { value } }) =>
                     handleFeedbackChange('rating')(value)
                   }
                 />
               </div>
-              <TextField
-                rows="4"
-                multiline
-                rowsMax="10"
-                label="comment"
-                value={feedback.comment}
-                className={classes.commentField}
-                id="standard-multiline-flexible"
-                onChange={({ target: { value } }) =>
-                  handleFeedbackChange('comment')(value)
-                }
-              />
+              {readOnly ? (
+                <Typography>{restaurantToRate.attributes.comment}</Typography>
+              ) : (
+                <TextField
+                  rows="4"
+                  multiline
+                  rowsMax="10"
+                  label="comment"
+                  value={feedback.comment}
+                  className={classes.commentField}
+                  id="standard-multiline-flexible"
+                  onChange={({ target: { value } }) =>
+                    handleFeedbackChange('comment')(value)
+                  }
+                />
+              )}
             </div>
-            <div className={classes.buttonWrapper}>
-              <Button color="primary" variant="contained" onClick={submitRate}>
-                Submit
-              </Button>
-            </div>
+            {!readOnly && (
+              <div className={classes.buttonWrapper}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={submitRate}
+                >
+                  Submit
+                </Button>
+              </div>
+            )}
           </DialogContent>
         </>
       ) : null}
