@@ -25,10 +25,9 @@ export default {
       this.setList(userRestaurantList);
     },
 
-    async rateRestaurant({ userKey, feedback, restaurantId }) {
+    async rateRestaurant({ feedback, restaurantId }) {
       const { userRestaurantList, rate } = await restaurantsApi.rateRestaurant({
         feedback,
-        userKey,
         restaurantId,
       });
       this.setRates(rate);

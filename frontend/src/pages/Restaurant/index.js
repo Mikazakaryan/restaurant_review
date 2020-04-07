@@ -25,13 +25,20 @@ const Restaurant = ({
 
   if (cookies.get('sid') === 'null') history.push('/');
 
-  useEffect(() => {
-    if (cookies.get('sid') && cookies.get('sid') !== 'null') fetchUser();
-  }, [cookies.get('sid'), fetchUser]);
+  const fetch = async () => {
+    await fetchUser();
+    fetchAllRestaurants();
+  };
 
   useEffect(() => {
-    if (isUser && !restaurantsList.length) fetchAllRestaurants();
-  }, [isUser, restaurantsList, fetchAllRestaurants]);
+    if (cookies.get('sid') && cookies.get('sid') !== 'null') {
+      fetch();
+    }
+  }, [cookies.get('sid'), fetchUser]);
+
+  // useEffect(() => {
+  //   if (isUser && !restaurantsList.length) fetchAllRestaurants();
+  // }, [isUser, restaurantsList, fetchAllRestaurants]);
 
   const getComponent = () => {
     if (isUser)

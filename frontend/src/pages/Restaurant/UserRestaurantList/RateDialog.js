@@ -27,7 +27,7 @@ const UserRateDialog = ({
     setFeedback({ ...feedback, [field]: value });
 
   const submitRate = () => {
-    rateRestaurant({ feedback, userKey, restaurantId: restaurantToRate.id });
+    rateRestaurant({ feedback, restaurantId: restaurantToRate.id });
     closeDialog();
   };
 

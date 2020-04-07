@@ -2,7 +2,7 @@
 
 const db = require("@arangodb").db;
 
-const collections = ["restaurants"];
+const collections = ["restaurants", "auth_users", "auth_sessions"];
 const edges = ["hasRated"];
 
 collections.forEach((collectionName) => {
