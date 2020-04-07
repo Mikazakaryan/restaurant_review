@@ -13,7 +13,7 @@
     "concurrently": "^5.1.0"
   },
   "scripts": {
-    "bootstrap": "concurrently -n \"DB-server,user-service,restaurant-service\" \"foxx server set toptal http://localhost:8529/ --database toptal\" \"cd user_foxx && foxx install --server toptal --database toptal /user\" \"foxx install --server toptal --database toptal /restaurant\"",
-    "compose:all": "concurrently -n \"backend,frontend,\" \"cd backend && yarn start\" \"cd frontend && yarn start\""
+    "bootstrap": "concurrently -n \"DB-server,auth-service,restaurant-service\" \"foxx server set toptal http://localhost:8529/ --database toptal\" \"cd auth_foxx && foxx install --server toptal --database toptal /auth\" \"cd restaurant_foxx && foxx install --server toptal --database toptal /restaurant\"",
+    "compose:all": "concurrently -n \"db, backend,frontend,\" \"/usr/local/Cellar/arangodb/3.6.2_1/sbin/arangod -c $HOME/Library/ArangoDB-etc/arangod.conf --http.trusted-origin '*'\" \"cd backend && yarn start\" \"cd frontend && yarn start\""
   }
 }

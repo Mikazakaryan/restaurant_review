@@ -1,8 +1,9 @@
+import Cookies from 'universal-cookie';
+
 import userApi from '../../apiProviders/user';
-import localStorage from '../../utils/localStorage';
 
 const defaultState = {
-  user: localStorage.getObject('user') || {},
+  user: {},
 };
 
 export default {
@@ -15,24 +16,33 @@ export default {
     clearState: () => ({ ...defaultState }),
   },
   effects: dispatch => ({
-    async fetchUser() {},
-    async login({ username, password }) {
-      const { user: userRes } = await userApi.login({ username, password });
-      const user = Object.values(userRes)[0];
-      localStorage.setObject('user', user);
+    async fetchUser() {
+      const userRes = await userApi.getUser();
+      this.setUser(userRes);
+    },
 
-      this.setUser(user);
+    async login({ username, password }) {
+      try {
+        await userApi.login({ username, password });
+        await dispatch.user.fetchUser();
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     async signup(props) {
-      const user = await userApi.signup(props);
-
-      this.setUser(user);
+      try {
+        await userApi.signup(props);
+        await dispatch.user.fetchUser();
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     async logOut() {
-      localStorage.clear();
-
+      await userApi.logout();
+      const cookies = new Cookies();
+      cookies.remove('sid');
       Object.values(dispatch).forEach(model => {
         if (model.clearState) {
           model.clearState();

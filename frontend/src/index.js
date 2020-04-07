@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Cookies from 'universal-cookie';
 import { Provider } from 'react-redux';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
@@ -12,8 +13,10 @@ import {
 
 import store from './store';
 import * as Pages from './pages';
+import Header from './pages/Header';
 import theme from './utils/theme';
-import localStorage from './utils/localStorage';
+
+const cookies = new Cookies();
 
 const Layout = ({ children }) => (
   <ThemeProvider theme={theme}>
@@ -24,15 +27,14 @@ const Layout = ({ children }) => (
   </ThemeProvider>
 );
 
-const ProtectedRoute = ({ path, component: Component }) => {
-  const user = localStorage.getObject('user');
-
-  return (
+const ProtectedRoute = ({ path, component: Component }) => (
+  <>
+    <Header />
     <RouterRoute
       exact
       path={path}
       render={({ location }) =>
-        user.id ? (
+        cookies.get('sid') && cookies.get('sid') !== 'null' ? (
           <Component />
         ) : (
           <Redirect
@@ -46,8 +48,8 @@ const ProtectedRoute = ({ path, component: Component }) => {
         )
       }
     />
-  );
-};
+  </>
+);
 
 const Route = ({ path, component: Component }) => (
   <RouterRoute exact path={path}>

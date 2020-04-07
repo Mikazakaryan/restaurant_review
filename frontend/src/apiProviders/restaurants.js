@@ -1,15 +1,10 @@
-import axios from 'axios';
+import axios from '../config/axios';
 import normalize from 'json-api-normalizer';
 
-import { backendUrl as baseUrl } from '../config/constants';
-
-const fetchAll = async ({ userKey }) => {
+const fetchAll = async () => {
   const res = await axios({
     method: 'get',
-    url: `${baseUrl}/restaurant?userKey=${userKey}`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    url: '/restaurant',
   });
 
   const normalizedUser = normalize(res.data);
@@ -23,12 +18,10 @@ const fetchAll = async ({ userKey }) => {
 const rateRestaurant = async ({ feedback, userKey, restaurantId }) => {
   const res = await axios({
     method: 'post',
-    url: `${baseUrl}/restaurant/rate/${restaurantId}`,
+    url: `/restaurant/rate/${restaurantId}`,
     data: { feedback, userKey },
-    headers: {
-      'Content-Type': 'application/json',
-    },
   });
+
   const normalizedUser = normalize(res.data);
 
   return {

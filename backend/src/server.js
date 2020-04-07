@@ -1,49 +1,24 @@
-const cors = require('cors');
 const express = require('express');
-const bodyParser = require('body-parser');
 
-const routers = require('./routers');
+require('./config/dotenv');
+
+const corsMiddleware = require('./middlewares/cors');
+const proxyMiddleware = require('./middlewares/proxyMiddleware');
 
 const { PORT } = process.env;
 
-const app = express();
+const App = express();
 
-const errorMiddleware = (err, _req, res, _next) => {
-  if (err.msg) {
-    res.status(err.status).json({
-      msg: err.msg,
-      status: err.status,
-      errors: err.errors,
+App.use(corsMiddleware)
+  .all('/auth/*', proxyMiddleware)
+  .all('/posts/*', proxyMiddleware)
+  .all('/*', (_req, res) => {
+    res.status(404).json({
+      data: null,
+      error: {
+        message: 'route not found',
+      },
     });
-  } else {
-    console.log({ err });
-    res.status(500).json({
-      msg: 'Something went wrong',
-      status: 500,
-    });
-  }
-};
-
-try {
-  app
-    .use(cors())
-    .use(bodyParser.json())
-    .get('/isalive', (_req, res) => {
-      res.sendStatus(200);
-    })
-    .use('/user', routers.userRouter)
-    .use('/restaurant', routers.restaurantRouter)
-    .use('*', routers.unknownRouter)
-    .use(errorMiddleware)
-    .listen(
-      PORT,
-      console.log({
-        Message: 'Server Online!',
-        Port: `${PORT}`,
-      }),
-    );
-} catch (serverError) {
-  console.error({
-    ErrorPayload: serverError,
   });
-}
+
+App.listen(Number(PORT), () => console.log(`Listening to localhost:${PORT}`));

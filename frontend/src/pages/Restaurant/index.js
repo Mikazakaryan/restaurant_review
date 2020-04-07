@@ -1,5 +1,8 @@
+import get from 'lodash/get';
 import { connect } from 'react-redux';
+import Cookies from 'universal-cookie';
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import useStyles from './styles';
 import UserRestaurantList from './UserRestaurantList';
@@ -7,19 +10,28 @@ import UserRestaurantList from './UserRestaurantList';
 const Restaurant = ({
   user,
   rates,
+  fetchUser,
   rateRestaurant,
   restaurantsList,
   fetchAllRestaurants,
 }) => {
   const classes = useStyles();
-  const userKey = user.id;
-  const isUser = user.attributes.role === 'user';
-  const isOwner = user.attributes.role === 'owner';
-  const isAdmin = user.attributes.role === 'admin';
+  const history = useHistory();
+  const cookies = new Cookies();
+
+  const isUser = get(user, ['attributes', 'role']) === 'user';
+  const isOwner = get(user, ['attributes', 'role']) === 'owner';
+  const isAdmin = get(user, ['attributes', 'role']) === 'admin';
+
+  if (cookies.get('sid') === 'null') history.push('/');
 
   useEffect(() => {
-    if (isUser) fetchAllRestaurants({ userKey });
-  }, [user, fetchAllRestaurants]);
+    if (cookies.get('sid') && cookies.get('sid') !== 'null') fetchUser();
+  }, [cookies.get('sid'), fetchUser]);
+
+  useEffect(() => {
+    if (isUser && !restaurantsList.length) fetchAllRestaurants();
+  }, [isUser, restaurantsList, fetchAllRestaurants]);
 
   const getComponent = () => {
     if (isUser)
@@ -27,11 +39,12 @@ const Restaurant = ({
         <UserRestaurantList
           rates={rates}
           classes={classes}
-          userKey={userKey}
+          userKey={user.id}
           rateRestaurant={rateRestaurant}
           restaurantsList={restaurantsList}
         />
       );
+    return null;
   };
 
   return <div className={classes.root}>{getComponent()}</div>;
@@ -47,10 +60,12 @@ const mapState = ({
 });
 
 const mapDispatch = ({
+  user: { fetchUser },
   restaurants: { fetchAllRestaurants, rateRestaurant },
 }) => ({
-  fetchAllRestaurants,
+  fetchUser,
   rateRestaurant,
+  fetchAllRestaurants,
 });
 
 export default connect(mapState, mapDispatch)(Restaurant);

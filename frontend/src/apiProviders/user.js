@@ -1,44 +1,33 @@
-import axios from 'axios';
+import axios from '../config/axios';
 import normalize from 'json-api-normalizer';
 
-import { backendUrl as baseUrl } from '../config/constants';
-
-const login = async ({ username, password }) => {
-  const res = await axios({
+const login = ({ username, password }) =>
+  axios({
     method: 'post',
-    url: `${baseUrl}/user/login`,
-    headers: { 'Content-Type': 'application/json' },
-    data: {
-      username,
-      password,
-    },
+    url: '/auth/login',
+    data: { username, password },
   });
 
-  const normalizedUser = normalize(res.data);
-
-  return {
-    user: normalizedUser.user,
-  };
-};
-
-const signup = async props => {
-  const res = await axios({
-    method: 'post',
-    url: `${baseUrl}/user/signup`,
+const signup = props =>
+  axios({
     data: props,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    method: 'post',
+    url: '/auth/signup',
   });
 
-  const normalizedUser = normalize(res.data);
+const getUser = async () => {
+  const res = await axios({
+    method: 'get',
+    url: '/auth/whoami',
+  });
 
-  return {
-    user: normalizedUser.user,
-  };
+  return Object.values(normalize(res.data).user)[0];
 };
 
-export default {
-  login,
-  signup,
-};
+const logout = () =>
+  axios({
+    method: 'post',
+    url: '/auth/logout',
+  });
+
+export default { logout, login, signup, getUser };

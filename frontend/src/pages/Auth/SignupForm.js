@@ -31,7 +31,12 @@ const SignupForm = ({ classes, onSignup, isSignupLoading }) => {
 
   const onEditField = (field, value) => setState({ ...state, [field]: value });
 
-  const onSubmit = () => onSignup(state);
+  const onSubmit = () =>
+    onSignup({
+      role: state.role,
+      username: state.username,
+      password: state.password,
+    });
 
   return (
     <Form className={classes.form} onSubmit={onSubmit}>

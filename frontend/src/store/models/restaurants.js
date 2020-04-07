@@ -19,10 +19,8 @@ export default {
     clearState: () => ({ ...defaultState }),
   },
   effects: dispatch => ({
-    async fetchAllRestaurants({ userKey }) {
-      const { userRestaurantList, rate } = await restaurantsApi.fetchAll({
-        userKey,
-      });
+    async fetchAllRestaurants() {
+      const { userRestaurantList, rate } = await restaurantsApi.fetchAll();
       this.setRates(rate);
       this.setList(userRestaurantList);
     },
