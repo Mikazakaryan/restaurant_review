@@ -4,33 +4,66 @@ import normalize from 'json-api-normalizer';
 const fetchAll = async () => {
   const res = await axios({
     method: 'get',
-    url: '/restaurant/allForUser',
+    url: '/restaurant/user',
   });
 
-  const normalizedUser = normalize(res.data);
+  const normalizedData = normalize(res.data);
 
   return {
-    rate: normalizedUser.rate || {},
-    userRestaurantList: normalizedUser.userRestaurantList || {},
+    rate: normalizedData.rate || {},
+    userRestaurantList: normalizedData.userRestaurantList || {},
   };
 };
 
 const rateRestaurant = async ({ feedback, restaurantId }) => {
   const res = await axios({
     method: 'post',
-    url: `/restaurant/rate`,
+    url: `/restaurant/user/rate`,
     data: { ...feedback, restaurantKey: restaurantId },
   });
 
-  const normalizedUser = normalize(res.data);
+  const normalizedData = normalize(res.data);
 
   return {
-    rate: normalizedUser.rate || {},
-    userRestaurantList: normalizedUser.userRestaurantList || {},
+    rate: normalizedData.rate || {},
+    userRestaurantList: normalizedData.userRestaurantList || {},
+  };
+};
+
+const fetchOwnedRestaurants = async () => {
+  const res = await axios({
+    method: 'get',
+    url: `/restaurant/owner`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  console.log({ normalizedData });
+
+  return {
+    rate: normalizedData.rate || {},
+    ownerRestaurantList: normalizedData.ownerRestaurantList || {},
+  };
+};
+
+const createRestaurant = async ({ name }) => {
+  const res = await axios({
+    method: 'post',
+    data: { name },
+    url: `/restaurant/owner/create`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rate: normalizedData.rate || {},
+    ownerRestaurantList: normalizedData.ownerRestaurantList || {},
   };
 };
 
 export default {
   fetchAll,
   rateRestaurant,
+  createRestaurant,
+  fetchOwnedRestaurants,
 };

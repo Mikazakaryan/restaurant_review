@@ -1,47 +1,54 @@
 import get from 'lodash/get';
 import { connect } from 'react-redux';
 import Cookies from 'universal-cookie';
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 import useStyles from './styles';
 import UserRestaurantList from './UserRestaurantList';
+import OwnerRestaurantList from './OwnerRestaurantList';
 
 const Restaurant = ({
   user,
   rates,
   fetchUser,
+  ownerList,
   rateRestaurant,
   restaurantsList,
+  createRestaurant,
   fetchAllRestaurants,
+  fetchOwnedRestaurants,
 }) => {
   const classes = useStyles();
-  const history = useHistory();
   const cookies = new Cookies();
-
-  const isUser = get(user, ['attributes', 'role']) === 'user';
-  const isOwner = get(user, ['attributes', 'role']) === 'owner';
-  const isAdmin = get(user, ['attributes', 'role']) === 'admin';
-
-  if (cookies.get('sid') === 'null') history.push('/');
-
-  const fetch = async () => {
-    await fetchUser();
-    fetchAllRestaurants();
-  };
+  const [role, setRole] = useState(get(user, ['attributes', 'role']));
 
   useEffect(() => {
-    if (cookies.get('sid') && cookies.get('sid') !== 'null') {
-      fetch();
-    }
-  }, [cookies.get('sid'), fetchUser]);
+    setRole(get(user, ['attributes', 'role']));
+  }, [user]);
 
-  // useEffect(() => {
-  //   if (isUser && !restaurantsList.length) fetchAllRestaurants();
-  // }, [isUser, restaurantsList, fetchAllRestaurants]);
+  useEffect(() => {
+    if (!user.id && cookies.get('sid') && cookies.get('sid') !== 'null') {
+      fetchUser();
+    }
+  }, [user, cookies, cookies.get('sid'), fetchUser]);
+
+  useEffect(() => {
+    if (role === 'user' && !Object.values(restaurantsList).length) {
+      fetchAllRestaurants();
+    }
+    if (role === 'owner' && !Object.values(ownerList).length) {
+      fetchOwnedRestaurants();
+    }
+  }, [
+    role,
+    ownerList,
+    restaurantsList,
+    fetchAllRestaurants,
+    fetchOwnedRestaurants,
+  ]);
 
   const getComponent = () => {
-    if (isUser)
+    if (role === 'user')
       return (
         <UserRestaurantList
           rates={rates}
@@ -51,6 +58,17 @@ const Restaurant = ({
           restaurantsList={restaurantsList}
         />
       );
+
+    if (role === 'owner')
+      return (
+        <OwnerRestaurantList
+          rates={rates}
+          classes={classes}
+          ownerList={ownerList}
+          createRestaurant={createRestaurant}
+        />
+      );
+
     return null;
   };
 
@@ -59,20 +77,28 @@ const Restaurant = ({
 
 const mapState = ({
   user: { user },
-  restaurants: { list: restaurantsList, rates },
+  restaurants: { userList: restaurantsList, ownerList, rates },
 }) => ({
   user,
   rates,
+  ownerList,
   restaurantsList,
 });
 
 const mapDispatch = ({
   user: { fetchUser },
-  restaurants: { fetchAllRestaurants, rateRestaurant },
+  restaurants: {
+    rateRestaurant,
+    createRestaurant,
+    fetchAllRestaurants,
+    fetchOwnedRestaurants,
+  },
 }) => ({
   fetchUser,
   rateRestaurant,
+  createRestaurant,
   fetchAllRestaurants,
+  fetchOwnedRestaurants,
 });
 
 export default connect(mapState, mapDispatch)(Restaurant);

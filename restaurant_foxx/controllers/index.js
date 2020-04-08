@@ -1,28 +1,29 @@
 const db = require("@arangodb").db;
 const query = require("@arangodb").query;
 
-const getRestaurants = (userId) =>
+const getUserRestaurants = (userId) =>
   query`    
   FOR restaurant IN restaurants
-    LET ratings =  (
-      FOR user, vote IN 1..1 INBOUND restaurant hasRated
-      RETURN vote.rating
+    LET ratings = (
+      FOR rate, edge IN 1..1 INBOUND restaurant belongsTo
+      RETURN rate.rating
     )
 
     RETURN merge(restaurant, {
+      lastRate: FIRST(
+        FOR rate, edge IN 1..1 INBOUND restaurant belongsTo
+        SORT rate.date DESC
+        LIMIT 1
+        RETURN rate
+      ),
       isRated: HAS(
         FIRST(
-          FOR vote, edge IN 1..1 INBOUND restaurant hasRated
-          FILTER edge._from == ${userId}  
-          RETURN edge   
-        ), 
+          FOR vertex, edge IN OUTBOUND SHORTEST_PATH
+          ${userId} TO restaurant
+          hasRated, belongsTo
+          return vertex
+        ),
       '_id'),
-      lastRate: FIRST(
-        FOR user, vote IN 1..1 INBOUND restaurant hasRated
-        SORT vote.date DESC
-        LIMIT 1
-        RETURN vote
-      ),
       lowestRate: LAST(ratings),
       highestRate: FIRST(ratings),
       rating: SUM(ratings) / LENGTH(ratings)
@@ -32,18 +33,65 @@ const getRestaurants = (userId) =>
 const rate = (userId, { restaurantKey, date, rating, comment }) => {
   const restaurantId = `restaurants/${restaurantKey}`;
 
-  db._collection("hasRated").insert({
-    rating: rating,
-    _from: userId,
-    comment: comment,
-    _to: restaurantId,
-    date: new Date(date),
+  const rate = db._collection("rates").insert({
+    date,
+    rating,
+    comment,
   });
 
-  return getRestaurants(userId);
+  db._collection("belongsTo").insert({
+    _from: rate._id,
+    _to: restaurantId,
+  });
+
+  db._collection("hasRated").insert({
+    _to: rate._id,
+    _from: userId,
+  });
+
+  return getUserRestaurants(userId);
+};
+
+const getOwned = (userId) =>
+  query`
+    FOR restaurant IN 1..1 OUTBOUND ${userId} isOwn
+      LET ratings = (
+        FOR rate IN 1..1 INBOUND restaurant belongsTo
+        RETURN rate.rating
+      )
+      RETURN MERGE(restaurant, {
+        rates: (
+          FOR rate IN 1..1 INBOUND restaurant belongsTo
+          RETURN MERGE(rate, {
+            commentedBy: FIRST(
+              FOR user IN 1..1 INBOUND rate hasRated
+              LIMIT 1
+              RETURN user.name
+            )
+          })
+        ),
+        lowestRate: LAST(ratings),
+        highestRate: FIRST(ratings),
+        rating: SUM(ratings) / LENGTH(ratings)
+      })
+  `.toArray();
+
+const create = ({ userId, name }) => {
+  const document = db._collection("restaurants").insert({
+    name,
+  });
+
+  db._collection("isOwn").insert({
+    _from: userId,
+    _to: document._id,
+  });
+
+  return getOwned(userId);
 };
 
 module.exports = {
   rate,
-  getAll: getRestaurants,
+  create,
+  getOwned,
+  getAll: getUserRestaurants,
 };

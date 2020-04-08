@@ -43,6 +43,7 @@ export default {
       await userApi.logout();
       const cookies = new Cookies();
       cookies.remove('sid');
+      window.location.href = '/';
       Object.values(dispatch).forEach(model => {
         if (model.clearState) {
           model.clearState();

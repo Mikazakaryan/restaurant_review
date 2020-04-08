@@ -26,6 +26,9 @@ const UserTableList = ({
     setIsLastRateOpen(true);
   };
 
+  const sortByRate = (a, b, field) =>
+    a.attributes[field] < b.attributes[field] ? 1 : -1;
+
   return (
     <MaterialTable
       columns={[
@@ -42,6 +45,7 @@ const UserTableList = ({
               value={dowData.attributes.rating}
             />
           ),
+          customSort: (a, b) => sortByRate(a, b, 'rating'),
         },
         {
           title: 'Highest Rate',
@@ -52,6 +56,7 @@ const UserTableList = ({
               value={dowData.attributes.highestRate}
             />
           ),
+          customSort: (a, b) => sortByRate(a, b, 'highestRate'),
         },
         {
           title: 'Lowest Rate',
@@ -62,6 +67,7 @@ const UserTableList = ({
               value={dowData.attributes.lowestRate}
             />
           ),
+          customSort: (a, b) => sortByRate(a, b, 'lowestRate'),
         },
         {
           title: 'Last Review',

@@ -16,10 +16,8 @@ const Header = ({ logOut }) => {
   );
 };
 
-const mapState = ({}) => ({});
-
 const mapDispatch = ({ user: { logOut } }) => ({
   logOut,
 });
 
-export default connect(mapState, mapDispatch)(Header);
+export default connect(null, mapDispatch)(Header);
