@@ -19,3 +19,11 @@ collections.forEach((collectionName) => {
 edges.forEach((edgeName) => {
   if (!db._collection(edgeName)) db._createEdgeCollection(edgeName);
 });
+
+edges.forEach((edgeName) =>
+  db._collection(edgeName).ensureIndex({
+    unique: true,
+    type: "hash",
+    fields: ["_from", "_to"],
+  })
+);
