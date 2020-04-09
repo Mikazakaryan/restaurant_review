@@ -14,7 +14,13 @@ const getUserRestaurants = (userId) =>
         FOR rate, edge IN 1..1 INBOUND restaurant belongsTo
         SORT rate.date DESC
         LIMIT 1
-        RETURN rate
+        RETURN MERGE(rate, {
+          reply: FIRST(
+            FOR reply IN 1..1 INBOUND rate repliedFor
+              LIMIT 1
+              RETURN reply.text
+          )
+        })
       ),
       isRated: HAS(
         FIRST(

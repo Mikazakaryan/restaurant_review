@@ -79,7 +79,12 @@ const UserRateDialog = ({
                 />
               </div>
               {readOnly ? (
-                <Typography>{restaurantToRate.attributes.comment}</Typography>
+                <>
+                  <Typography className={classes.subTitles} variant="h4">
+                    Comment
+                  </Typography>
+                  <Typography>{restaurantToRate.attributes.comment}</Typography>
+                </>
               ) : (
                 <TextField
                   rows="4"
@@ -94,6 +99,14 @@ const UserRateDialog = ({
                   }
                 />
               )}
+              {readOnly ? (
+                <>
+                  <Typography className={classes.subTitles} variant="h4">
+                    Reply
+                  </Typography>
+                  <Typography>{restaurantToRate.attributes.reply}</Typography>
+                </>
+              ) : null}
             </div>
             {!readOnly && (
               <div className={classes.buttonWrapper}>

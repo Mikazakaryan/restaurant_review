@@ -51,4 +51,7 @@ export default makeStyles(() => ({
     minWidth: '200px',
     justifyContent: 'flex-end',
   },
+  subTitles: {
+    marginTop: '20px',
+  },
 }));
