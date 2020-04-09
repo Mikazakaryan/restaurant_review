@@ -1,14 +1,10 @@
-import React, { forwardRef, useState } from 'react';
-import MaterialTable from 'material-table';
+import React, { useState } from 'react';
 import Rating from '@material-ui/lab/Rating';
 import Dialog from '@material-ui/core/Dialog';
-import Arrow from '@material-ui/icons/ArrowUpward';
 import { TextField, Button } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
 
-const tableIcons = {
-  SortArrow: forwardRef((props, ref) => <Arrow {...props} ref={ref} />),
-};
+import Table from '../../../components/Table';
 
 const sortByRate = (a, b, field) =>
   a.attributes[field] < b.attributes[field] ? 1 : -1;
@@ -33,7 +29,7 @@ const RateDialog = ({ classes, onReply, closeDialog, open, rates }) => {
       }}
     >
       <DialogContent>
-        <MaterialTable
+        <Table
           columns={[
             {
               title: 'date',
@@ -84,16 +80,6 @@ const RateDialog = ({ classes, onReply, closeDialog, open, rates }) => {
             },
           ]}
           data={rates}
-          icons={tableIcons}
-          options={{
-            header: true,
-            search: false,
-            paging: false,
-            sorting: true,
-            toolbar: false,
-            selection: false,
-            showTitle: false,
-          }}
         />
       </DialogContent>
     </Dialog>

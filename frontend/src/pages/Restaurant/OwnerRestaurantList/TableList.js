@@ -1,13 +1,9 @@
+import React from 'react';
 import get from 'lodash/get';
-import React, { forwardRef } from 'react';
-import MaterialTable from 'material-table';
 import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
-import Arrow from '@material-ui/icons/ArrowUpward';
 
-const tableIcons = {
-  SortArrow: forwardRef((props, ref) => <Arrow {...props} ref={ref} />),
-};
+import Table from '../../../components/Table';
 
 const OwnerTableList = ({
   classes,
@@ -30,7 +26,7 @@ const OwnerTableList = ({
 
   return (
     <div className={classes.ownerTableWrapper}>
-      <MaterialTable
+      <Table
         columns={[
           {
             title: 'Name',
@@ -94,17 +90,7 @@ const OwnerTableList = ({
             ),
           },
         ]}
-        icons={tableIcons}
         data={Object.values(restaurantsList)}
-        options={{
-          header: true,
-          search: false,
-          paging: false,
-          sorting: true,
-          toolbar: false,
-          selection: false,
-          showTitle: false,
-        }}
       />
     </div>
   );
