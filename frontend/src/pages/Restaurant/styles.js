@@ -31,4 +31,24 @@ export default makeStyles(() => ({
     marginTop: '30px',
     justifyContent: 'flex-end',
   },
+  ownerCreateWrapper: {
+    display: 'flex',
+    marginRight: '20px',
+    justifyContent: 'flex-end',
+  },
+  ownerRoot: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  ownerTableWrapper: {
+    display: 'flex',
+    marginTop: '20px',
+    justifyContent: 'center',
+  },
+  replyWrapper: {
+    display: 'flex',
+    minWidth: '200px',
+    justifyContent: 'flex-end',
+  },
 }));

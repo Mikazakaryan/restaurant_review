@@ -10,6 +10,7 @@ import OwnerRestaurantList from './OwnerRestaurantList';
 const Restaurant = ({
   user,
   rates,
+  onReply,
   fetchUser,
   ownerList,
   rateRestaurant,
@@ -53,7 +54,6 @@ const Restaurant = ({
         <UserRestaurantList
           rates={rates}
           classes={classes}
-          userKey={user.id}
           rateRestaurant={rateRestaurant}
           restaurantsList={restaurantsList}
         />
@@ -63,6 +63,7 @@ const Restaurant = ({
       return (
         <OwnerRestaurantList
           rates={rates}
+          onReply={onReply}
           classes={classes}
           ownerList={ownerList}
           createRestaurant={createRestaurant}
@@ -88,12 +89,14 @@ const mapState = ({
 const mapDispatch = ({
   user: { fetchUser },
   restaurants: {
+    onReply,
     rateRestaurant,
     createRestaurant,
     fetchAllRestaurants,
     fetchOwnedRestaurants,
   },
 }) => ({
+  onReply,
   fetchUser,
   rateRestaurant,
   createRestaurant,

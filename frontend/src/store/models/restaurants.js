@@ -53,5 +53,14 @@ export default {
       this.setRates(rate);
       this.setOwnerList(ownerRestaurantList);
     },
+
+    async onReply({ id, text }) {
+      const { rate, ownerRestaurantList } = await restaurantsApi.reply({
+        id,
+        text,
+      });
+      this.setRates(rate);
+      this.setOwnerList(ownerRestaurantList);
+    },
   }),
 };

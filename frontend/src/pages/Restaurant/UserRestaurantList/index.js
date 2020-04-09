@@ -11,7 +11,6 @@ const defaultFeedback = {
 
 const UserRestaurantList = ({
   rates,
-  userKey,
   classes,
   rateRestaurant,
   restaurantsList,
@@ -38,7 +37,6 @@ const UserRestaurantList = ({
       {lastReviewId && (
         <RateDialog
           {...{
-            userKey,
             classes,
             readOnly: true,
             isDialogOpen: isLastRateOpen,
@@ -50,7 +48,6 @@ const UserRestaurantList = ({
 
       <RateDialog
         {...{
-          userKey,
           classes,
           feedback,
           setFeedback,

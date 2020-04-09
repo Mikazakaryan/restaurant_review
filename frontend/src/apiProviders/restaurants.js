@@ -38,8 +38,6 @@ const fetchOwnedRestaurants = async () => {
 
   const normalizedData = normalize(res.data);
 
-  console.log({ normalizedData });
-
   return {
     rate: normalizedData.rate || {},
     ownerRestaurantList: normalizedData.ownerRestaurantList || {},
@@ -61,7 +59,23 @@ const createRestaurant = async ({ name }) => {
   };
 };
 
+const reply = async ({ id, text }) => {
+  const res = await axios({
+    method: 'post',
+    data: { id, text },
+    url: `/restaurant/owner/reply`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rate: normalizedData.rate || {},
+    ownerRestaurantList: normalizedData.ownerRestaurantList || {},
+  };
+};
+
 export default {
+  reply,
   fetchAll,
   rateRestaurant,
   createRestaurant,

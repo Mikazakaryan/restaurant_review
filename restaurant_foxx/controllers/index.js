@@ -65,8 +65,13 @@ const getOwned = (userId) =>
           RETURN MERGE(rate, {
             commentedBy: FIRST(
               FOR user IN 1..1 INBOUND rate hasRated
-              LIMIT 1
-              RETURN user.name
+                LIMIT 1
+                RETURN user.name
+            ),
+            reply: FIRST(
+              FOR reply IN 1..1 INBOUND rate repliedFor
+                LIMIT 1
+                RETURN reply.text
             )
           })
         ),
@@ -89,8 +94,27 @@ const create = ({ userId, name }) => {
   return getOwned(userId);
 };
 
+const reply = ({ id, text, userId }) => {
+  const reply = db._collection("replies").insert({
+    text,
+  });
+
+  db._collection("hasReplied").insert({
+    _from: userId,
+    _to: reply._id,
+  });
+
+  db._collection("repliedFor").insert({
+    _from: reply._id,
+    _to: `rates/${id}`,
+  });
+
+  return getOwned(userId);
+};
+
 module.exports = {
   rate,
+  reply,
   create,
   getOwned,
   getAll: getUserRestaurants,

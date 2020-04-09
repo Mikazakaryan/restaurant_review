@@ -14,7 +14,6 @@ import {
 
 const UserRateDialog = ({
   classes,
-  userKey,
   readOnly,
   feedback,
   setFeedback,

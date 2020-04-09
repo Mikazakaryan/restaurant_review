@@ -85,7 +85,7 @@ const UserTableList = ({
                 variant="contained"
                 onClick={openLastRateModal(id)}
               >
-                read
+                Read
               </Button>
             );
           },

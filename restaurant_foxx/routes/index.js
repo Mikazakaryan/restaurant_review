@@ -96,4 +96,34 @@ module.exports = (router) => {
     .response(joi.object().required(), "restaurant collection")
     .summary("create restaurant")
     .description("create restaurant by user id");
+
+  router
+    .post("/owner/reply", (req, res) => {
+      const user = req.currentUser;
+
+      if (user.role !== "owner") res.throw("unauthorized");
+
+      const restaurants = restaurantController.reply({
+        userId: user._id,
+        ...req.body,
+      });
+      const serializedRestaurants = Serializer.serialize(
+        "ownerRestaurantList",
+        restaurants
+      );
+
+      res.send(serializedRestaurants);
+    })
+    .body(
+      joi
+        .object({
+          id: joi.string().required(),
+          text: joi.string().required(),
+        })
+        .required(),
+      "Reply to rate"
+    )
+    .response(joi.object().required(), "restaurant collection")
+    .summary("reply to rate")
+    .description("reply to rate by user id");
 };
