@@ -24,7 +24,7 @@ const OwnerRestaurantList = ({
     setRates(
       isAllRates
         ? filteredByRestaurantsRates
-        : filteredByRestaurantsRates.filter(el => !el.reply),
+        : filteredByRestaurantsRates.filter(el => !el.attributes.reply),
     );
   }, [allRates, isAllRates, restaurantIdsForRates]);
 
