@@ -34,33 +34,33 @@ const OwnerTableList = ({
           },
           {
             title: 'Rating',
-            render: dowData => (
+            render: rowData => (
               <Rating
                 readOnly
                 precision={0.1}
-                value={dowData.attributes.rating}
+                value={rowData.attributes.rating}
               />
             ),
             customSort: (a, b) => sortByRate(a, b, 'rating'),
           },
           {
             title: 'Highest Rate',
-            render: dowData => (
+            render: rowData => (
               <Rating
                 readOnly
                 precision={0.1}
-                value={dowData.attributes.highestRate}
+                value={rowData.attributes.highestRate}
               />
             ),
             customSort: (a, b) => sortByRate(a, b, 'highestRate'),
           },
           {
             title: 'Lowest Rate',
-            render: dowData => (
+            render: rowData => (
               <Rating
                 readOnly
                 precision={0.1}
-                value={dowData.attributes.lowestRate}
+                value={rowData.attributes.lowestRate}
               />
             ),
             customSort: (a, b) => sortByRate(a, b, 'lowestRate'),

@@ -1,8 +1,73 @@
 const joi = require("joi");
 
+const Serializer = require("../serializers");
+const UserController = require("../controllers/user");
 const SessionController = require("../controllers/sessions");
 
 module.exports = (router) => {
+  router
+    .delete("/user", (req, res) => {
+      const [users, err] = UserController.deleteUser(req, req.body);
+
+      if (err) {
+        res.throw("unauthorized");
+      } else {
+        const serializedUsers = Serializer.serialize("user", users);
+        res.send(serializedUsers);
+      }
+    })
+    .body(
+      joi
+        .object({
+          id: joi.string().required(),
+        })
+        .required(),
+      "Credentials"
+    )
+    .response(joi.object().required(), "Users Collections")
+    .summary("delete user")
+    .description("delete user as admin by key");
+
+  router
+    .put("/user", (req, res) => {
+      const [users, err] = UserController.editUser(req, req.body);
+
+      if (err) {
+        res.throw("unauthorized");
+      } else {
+        const serializedUsers = Serializer.serialize("user", users);
+        res.send(serializedUsers);
+      }
+    })
+    .body(
+      joi
+        .object({
+          id: joi.string().required(),
+          role: joi.string().required(),
+          username: joi.string().required(),
+        })
+        .required(),
+      "Credentials"
+    )
+    .response(joi.object().required(), "Users Collections")
+    .summary("Edit user as admin")
+    .description("Edit user as admin by key");
+
+  router
+    .get("/all", (req, res) => {
+      const [users, err] = UserController.getAll(req);
+
+      if (err) {
+        res.throw("unauthorized");
+      } else {
+        const serializedUsers = Serializer.serialize("user", users);
+        res.send(serializedUsers);
+      }
+    })
+    .response(joi.object().required(), "Users Collections")
+    .summary("Get all as admin")
+    .description("Get all as admin by key");
+
   router
     .post("/login", (req, res) => {
       const { username, password } = req.body;
@@ -69,7 +134,8 @@ module.exports = (router) => {
     .get("/whoami", function (req, res) {
       try {
         const user = SessionController.whoami(req);
-        res.send(user);
+        const serializedUser = Serializer.serialize("user", user);
+        res.send(serializedUser);
       } catch (e) {
         res.send({ user: null });
       }

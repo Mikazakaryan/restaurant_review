@@ -69,6 +69,21 @@ module.exports = (router) => {
     .description("get only owned restaurants");
 
   router
+    .get("/admin", (req, res) => {
+      const user = req.currentUser;
+
+      if (user.role !== "admin") res.throw("unauthorized");
+
+      const data = restaurantController.getAllAsAdmin();
+      const serializedData = Serializer.serialize("adminData", data);
+
+      res.send(serializedData);
+    })
+    .response(joi.object().required(), "restaurant collections")
+    .summary("get restaurants")
+    .description("get only owned restaurants");
+
+  router
     .post("/owner/create", (req, res) => {
       const user = req.currentUser;
 

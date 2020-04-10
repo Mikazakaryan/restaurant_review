@@ -10,6 +10,7 @@ import OwnerRestaurantList from './OwnerRestaurantList';
 const Restaurant = ({
   user,
   rates,
+  logOut,
   onReply,
   fetchUser,
   ownerList,
@@ -70,7 +71,7 @@ const Restaurant = ({
         />
       );
 
-    return null;
+    return logOut();
   };
 
   return <div className={classes.root}>{getComponent()}</div>;
@@ -87,7 +88,7 @@ const mapState = ({
 });
 
 const mapDispatch = ({
-  user: { fetchUser },
+  user: { fetchUser, logOut },
   restaurants: {
     onReply,
     rateRestaurant,
@@ -96,6 +97,7 @@ const mapDispatch = ({
     fetchOwnedRestaurants,
   },
 }) => ({
+  logOut,
   onReply,
   fetchUser,
   rateRestaurant,

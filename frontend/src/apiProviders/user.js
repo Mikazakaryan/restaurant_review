@@ -30,4 +30,38 @@ const logout = () =>
     url: '/auth/logout',
   });
 
-export default { logout, login, signup, getUser };
+const fetchAllAsAdmin = async () => {
+  const res = await axios({
+    method: 'get',
+    url: '/auth/all',
+  });
+  return { users: normalize(res.data).user };
+};
+
+const editUser = async ({ id, username, role }) => {
+  const res = await axios({
+    method: 'put',
+    url: '/auth/user',
+    data: { id, username, role },
+  });
+  return { users: normalize(res.data).user };
+};
+
+const deleteUser = async ({ id }) => {
+  const res = await axios({
+    data: { id },
+    method: 'delete',
+    url: '/auth/user',
+  });
+  return { users: normalize(res.data).user };
+};
+
+export default {
+  login,
+  logout,
+  signup,
+  getUser,
+  editUser,
+  deleteUser,
+  fetchAllAsAdmin,
+};

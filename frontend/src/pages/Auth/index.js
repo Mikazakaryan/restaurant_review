@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
+import get from 'lodash/get';
 import { connect } from 'react-redux';
 import Cookies from 'universal-cookie';
 import { useHistory } from 'react-router-dom';
@@ -10,12 +11,23 @@ import SignupForm from './SignupForm';
 
 const cookies = new Cookies();
 
-const Login = ({ onLogin, onSignup, isLoginLoading, isSignupLoading }) => {
+const Login = ({
+  user,
+  onLogin,
+  onSignup,
+  isLoginLoading,
+  isSignupLoading,
+}) => {
   const classes = useStyles();
   const history = useHistory();
 
-  if (cookies.get('sid') && cookies.get('sid') !== 'null')
-    history.push('/restaurant');
+  if (cookies.get('sid') && cookies.get('sid') !== 'null') {
+    if (get(user, ['attributes', 'role']) === 'admin') {
+      history.push('/admin-dashboard');
+    } else {
+      history.push('/restaurant');
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -35,7 +47,8 @@ const mapState = ({
       user: { login: isLoginLoading, signup: isSignupLoading },
     },
   },
-}) => ({ isLoginLoading, isSignupLoading });
+  user: { user },
+}) => ({ user, isLoginLoading, isSignupLoading });
 
 const mapDispatch = ({ user: { login, signup } }) => ({
   onLogin: login,

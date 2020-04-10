@@ -37,11 +37,11 @@ const RateDialog = ({ classes, onReply, closeDialog, open, rates }) => {
             },
             {
               title: 'Rating',
-              render: dowData => (
+              render: rowData => (
                 <Rating
                   readOnly
                   precision={0.1}
-                  value={dowData.attributes.rating}
+                  value={rowData.attributes.rating}
                 />
               ),
               customSort: (a, b) => sortByRate(a, b, 'rating'),

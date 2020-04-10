@@ -63,6 +63,11 @@ const RouterWrapper = () => (
       <Switch>
         <Route exact path="/" component={Pages.Auth} />
         <ProtectedRoute exact path="/restaurant" component={Pages.Restaurant} />
+        <ProtectedRoute
+          exact
+          path="/admin-dashboard"
+          component={Pages.AdminDashboard}
+        />
       </Switch>
     </Layout>
   </Router>

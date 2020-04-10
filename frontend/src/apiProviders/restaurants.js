@@ -74,10 +74,26 @@ const reply = async ({ id, text }) => {
   };
 };
 
+const fetchAllAsAdmin = async () => {
+  const res = await axios({
+    method: 'get',
+    url: `/restaurant/admin`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rates: normalizedData.rate || {},
+    replies: normalizedData.reply || {},
+    restaurants: normalizedData.restaurant || {},
+  };
+};
+
 export default {
   reply,
   fetchAll,
   rateRestaurant,
+  fetchAllAsAdmin,
   createRestaurant,
   fetchOwnedRestaurants,
 };
