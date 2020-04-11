@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-import DateFnsUtils from '@date-io/date-fns';
-import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
 
 const EditDialog = ({ data, type, onEdit, closeDialog, isDialogOpen }) => {
   const [state, setState] = useState({ ...data.attributes });
 
-  console.log({ state });
+  const onChangeHandler = key => ({ target: { value } }) =>
+    setState({
+      ...state,
+      [key]: value,
+    });
 
   return (
     <Dialog open={isDialogOpen} onClose={closeDialog}>
@@ -34,7 +32,7 @@ const EditDialog = ({ data, type, onEdit, closeDialog, isDialogOpen }) => {
           .map(key => (
             <div key={key}>
               <Typography variant="h5">{key}</Typography>
-              <TextField value={data.attributes[key]} />
+              <TextField value={state[key]} onChange={onChangeHandler(key)} />
             </div>
           ))}
         <Button

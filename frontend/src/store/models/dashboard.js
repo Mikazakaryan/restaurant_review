@@ -52,5 +52,78 @@ export default {
       const { users } = await userApi.deleteUser({ id });
       this.setUserList(users);
     },
+
+    async editReply({ id, text }) {
+      const { rates, replies, restaurants } = await restaurantsApi.editReply({
+        id,
+        text,
+      });
+
+      this.setRateList(rates);
+      this.setReplyList(replies);
+      this.setRestaurantList(restaurants);
+    },
+
+    async deleteReply({ id }) {
+      const { rates, replies, restaurants } = await restaurantsApi.deleteReply({
+        id,
+      });
+
+      this.setRateList(rates);
+      this.setReplyList(replies);
+      this.setRestaurantList(restaurants);
+    },
+
+    async editRate({ id, comment, date, rating }) {
+      const { rates, replies, restaurants } = await restaurantsApi.editRate({
+        id,
+        date,
+        rating,
+        comment,
+      });
+
+      this.setRateList(rates);
+      this.setReplyList(replies);
+      this.setRestaurantList(restaurants);
+    },
+
+    async deleteRate({ id }) {
+      const { rates, replies, restaurants } = await restaurantsApi.deleteRate({
+        id,
+      });
+
+      this.setRateList(rates);
+      this.setReplyList(replies);
+      this.setRestaurantList(restaurants);
+    },
+
+    async editRestaurant({ id, name }) {
+      const {
+        rates,
+        replies,
+        restaurants,
+      } = await restaurantsApi.editRestaurant({
+        id,
+        name,
+      });
+
+      this.setRateList(rates);
+      this.setReplyList(replies);
+      this.setRestaurantList(restaurants);
+    },
+
+    async deleteRestaurant({ id }) {
+      const {
+        rates,
+        replies,
+        restaurants,
+      } = await restaurantsApi.deleteRestaurant({
+        id,
+      });
+
+      this.setRateList(rates);
+      this.setReplyList(replies);
+      this.setRestaurantList(restaurants);
+    },
   }),
 };

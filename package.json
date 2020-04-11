@@ -14,6 +14,7 @@
   },
   "scripts": {
     "bootstrap": "concurrently -n \"DB-server,auth-service,restaurant-service\" \"foxx server set toptal http://localhost:8529/ --database toptal\" \"cd auth_foxx && foxx install --server toptal --database toptal /auth\" \"cd restaurant_foxx && foxx install --server toptal --database toptal /restaurant\"",
+    "upgrade:servers": "concurrently -n \"auth-service,restaurant-service\" \"cd auth_foxx && foxx upgrade --server toptal --database toptal /auth\" \"cd restaurant_foxx && foxx upgrade --server toptal --database toptal /restaurant\"",
     "compose:all": "concurrently -n \"db, backend,frontend,\" \"/usr/local/Cellar/arangodb/3.6.2_1/sbin/arangod -c $HOME/Library/ArangoDB-etc/arangod.conf --http.trusted-origin '*'\" \"cd backend && yarn start\" \"cd frontend && yarn start\""
   }
 }

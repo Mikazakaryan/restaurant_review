@@ -89,11 +89,113 @@ const fetchAllAsAdmin = async () => {
   };
 };
 
+const editReply = async ({ id, text }) => {
+  const res = await axios({
+    method: 'put',
+    data: { id, text },
+    url: `/restaurant/admin/reply`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rates: normalizedData.rate || {},
+    replies: normalizedData.reply || {},
+    restaurants: normalizedData.restaurant || {},
+  };
+};
+
+const deleteReply = async ({ id }) => {
+  const res = await axios({
+    method: 'delete',
+    data: { id },
+    url: `/restaurant/admin/reply`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rates: normalizedData.rate || {},
+    replies: normalizedData.reply || {},
+    restaurants: normalizedData.restaurant || {},
+  };
+};
+
+const editRate = async ({ id, comment, date, rating }) => {
+  const res = await axios({
+    method: 'put',
+    url: `/restaurant/admin/rate`,
+    data: { id, comment, date, rating },
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rates: normalizedData.rate || {},
+    replies: normalizedData.reply || {},
+    restaurants: normalizedData.restaurant || {},
+  };
+};
+
+const deleteRate = async ({ id }) => {
+  const res = await axios({
+    method: 'delete',
+    data: { id },
+    url: `/restaurant/admin/rate`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rates: normalizedData.rate || {},
+    replies: normalizedData.reply || {},
+    restaurants: normalizedData.restaurant || {},
+  };
+};
+
+const editRestaurant = async ({ id, name }) => {
+  const res = await axios({
+    method: 'put',
+    data: { id, name },
+    url: `/restaurant/admin/restaurant`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rates: normalizedData.rate || {},
+    replies: normalizedData.reply || {},
+    restaurants: normalizedData.restaurant || {},
+  };
+};
+
+const deleteRestaurant = async ({ id }) => {
+  const res = await axios({
+    method: 'delete',
+    data: { id },
+    url: `/restaurant/admin/restaurant`,
+  });
+
+  const normalizedData = normalize(res.data);
+
+  return {
+    rates: normalizedData.rate || {},
+    replies: normalizedData.reply || {},
+    restaurants: normalizedData.restaurant || {},
+  };
+};
+
 export default {
   reply,
   fetchAll,
+  editRate,
+  editReply,
+  deleteRate,
+  deleteReply,
+  editRestaurant,
   rateRestaurant,
   fetchAllAsAdmin,
   createRestaurant,
+  deleteRestaurant,
   fetchOwnedRestaurants,
 };

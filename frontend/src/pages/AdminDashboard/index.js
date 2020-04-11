@@ -15,10 +15,16 @@ const AdminDashboard = ({
   userList,
   rateList,
   editUser,
+  editRate,
   replyList,
+  editReply,
+  deleteRate,
   deleteUser,
+  deleteReply,
   restaurantList,
+  editRestaurant,
   fetchAllAsAdmin,
+  deleteRestaurant,
 }) => {
   const [objToEdit, setObjToEdit] = useState({});
   const [typeToEdit, setTypeToEdit] = useState('');
@@ -34,17 +40,17 @@ const AdminDashboard = ({
   }, [user, fetchAllAsAdmin]);
 
   const editFunctions = {
-    user: (id, state) => editUser({ id, ...state }),
-    rate: (id, state) => () => () => {},
-    reply: (id, state) => () => () => {},
-    restaurant: (id, state) => () => () => {},
+    user: editUser,
+    rate: editRate,
+    reply: editReply,
+    restaurant: editRestaurant,
   };
 
   const deleteFunctions = {
-    user: id => () => deleteUser({ id }),
-    rate: id => () => () => {},
-    reply: id => () => () => {},
-    restaurant: id => () => () => {},
+    user: deleteUser,
+    rate: deleteRate,
+    reply: deleteReply,
+    restaurant: deleteRestaurant,
   };
 
   const dataByType = {
@@ -66,11 +72,11 @@ const AdminDashboard = ({
     setObjToEdit(dataByType[type][id]);
   };
 
-  const onDelete = ({ id, type }) => deleteFunctions[type](id);
+  const onDelete = ({ id, type }) => () => deleteFunctions[type]({ id });
 
   const onSaveEdit = ({ id, type, state }) => () => {
     closeDialog();
-    editFunctions[type](id, state);
+    editFunctions[type]({ id, ...state });
   };
 
   const tables = [
@@ -130,12 +136,28 @@ const mapState = ({
 
 const mapDispatch = ({
   user: { logOut },
-  dashboard: { fetchAllAsAdmin, editUser, deleteUser },
+  dashboard: {
+    editUser,
+    editRate,
+    editReply,
+    deleteUser,
+    deleteRate,
+    deleteReply,
+    editRestaurant,
+    fetchAllAsAdmin,
+    deleteRestaurant,
+  },
 }) => ({
   logOut,
   editUser,
+  editRate,
+  editReply,
   deleteUser,
+  deleteRate,
+  deleteReply,
+  editRestaurant,
   fetchAllAsAdmin,
+  deleteRestaurant,
 });
 
 export default connect(mapState, mapDispatch)(AdminDashboard);

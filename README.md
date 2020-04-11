@@ -14,7 +14,7 @@
 
 # bootstrap
 
-- you need to run `yarn bootstrap` in root of repository
+- you need running DB and then run command `yarn bootstrap` in root of repository
 
 # running
 

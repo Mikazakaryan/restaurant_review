@@ -5,7 +5,12 @@ const auth = createAuth();
 const users = module.context.collection("users");
 
 const signup = ({ role, username, password }, req) => {
-  const user = { role, username, passwordData: auth.create(password) };
+  const user = {
+    role,
+    username,
+    active: true,
+    passwordData: auth.create(password),
+  };
 
   const meta = users.save(user);
 

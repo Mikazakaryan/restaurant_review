@@ -16,10 +16,12 @@ const AdminTable = ({ data, onEdit, onDelete }) => {
           field: 'id',
         },
       ].concat(
-        ...Object.keys(data[0].attributes).map(key => ({
-          title: key,
-          field: `attributes.${key}`,
-        })),
+        ...Object.keys(data[0].attributes)
+          .filter(key => key !== 'active')
+          .map(key => ({
+            title: key,
+            field: `attributes.${key}`,
+          })),
         {
           title: 'Edit',
           render: rowData => (
