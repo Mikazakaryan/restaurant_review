@@ -6,7 +6,14 @@ import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 
-const EditDialog = ({ data, type, onEdit, closeDialog, isDialogOpen }) => {
+const EditDialog = ({
+  data,
+  type,
+  onEdit,
+  classes,
+  closeDialog,
+  isDialogOpen,
+}) => {
   const [state, setState] = useState({ ...data.attributes });
 
   const onChangeHandler = key => ({ target: { value } }) =>
@@ -17,10 +24,10 @@ const EditDialog = ({ data, type, onEdit, closeDialog, isDialogOpen }) => {
 
   return (
     <Dialog open={isDialogOpen} onClose={closeDialog}>
-      <DialogTitle id="form-dialog-title" disableTypography={false}>
-        {`Edit ${type} id:${data.id}`}
+      <DialogTitle disableTypography={false}>
+        <Typography variant="h4"> {`Edit ${type} id:${data.id}`}</Typography>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent className={classes.dialogContent}>
         {Object.keys(data.attributes)
           .filter(
             key =>
@@ -30,18 +37,24 @@ const EditDialog = ({ data, type, onEdit, closeDialog, isDialogOpen }) => {
               key !== 'repliedTo',
           )
           .map(key => (
-            <div key={key}>
+            <div key={key} className={classes.fieldWrapper}>
               <Typography variant="h5">{key}</Typography>
-              <TextField value={state[key]} onChange={onChangeHandler(key)} />
+              <TextField
+                value={state[key]}
+                onChange={onChangeHandler(key)}
+                className={classes.textInput}
+              />
             </div>
           ))}
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={onEdit({ type, id: data.id, state })}
-        >
-          Save
-        </Button>
+        <div className={classes.buttonWrapper}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={onEdit({ type, id: data.id, state })}
+          >
+            Save
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

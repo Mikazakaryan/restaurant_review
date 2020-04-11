@@ -4,6 +4,7 @@ import Cookies from 'universal-cookie';
 import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 
+import useStyles from './styles';
 import AdminTable from './AdminTable';
 import EditDialog from './EditDialog';
 
@@ -26,6 +27,8 @@ const AdminDashboard = ({
   fetchAllAsAdmin,
   deleteRestaurant,
 }) => {
+  const classes = useStyles();
+
   const [objToEdit, setObjToEdit] = useState({});
   const [typeToEdit, setTypeToEdit] = useState('');
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -103,6 +106,7 @@ const AdminDashboard = ({
       {objToEdit.id && (
         <EditDialog
           data={objToEdit}
+          classes={classes}
           type={typeToEdit}
           onEdit={onSaveEdit}
           closeDialog={closeDialog}
@@ -110,8 +114,10 @@ const AdminDashboard = ({
         />
       )}
       {tables.map(table => (
-        <div key={table.name}>
-          <Typography variant="h2">{table.name}</Typography>
+        <div key={table.name} className={classes.tableWrapper}>
+          <Typography variant="h2" className={classes.header}>
+            {table.name}
+          </Typography>
           <AdminTable
             onEdit={onEdit}
             onDelete={onDelete}
