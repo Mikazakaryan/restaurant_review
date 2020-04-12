@@ -1,21 +1,21 @@
 # Backend
 
-- backend is simple node js app serve as a proxy
+- Backend is a NodeJS application served as a proxy.
 
 # Frontend
 
-- front end is simple react app
+- Frontend is a a ReactJS application.
 
 # Foxx services
 
-- those are [arangoDB](https://www.arangodb.com/) [foxx microservices](https://www.arangodb.com/docs/3.6/foxx.html)
-- you need to install [arangoDB](https://www.arangodb.com/docs/stable/installation.html) and [Fox Cli](https://www.arangodb.com/docs/3.6/programs-foxx-cli.html) to install microservices
-- create a DB named by toptal in web-view of arangoDB
+- Those are [arangoDB](https://www.arangodb.com/) [Foxx microservices](https://www.arangodb.com/docs/3.6/foxx.html)
+- You need to install [arangoDB](https://www.arangodb.com/docs/stable/installation.html) and [Foxx CLI](https://www.arangodb.com/docs/3.6/programs-foxx-cli.html) to install microservices
+- Create a DB named by toptal in the web-view of arangoDB
 
 # bootstrap
 
-- you need running DB and then run command `yarn bootstrap` in root of repository
+- You need to run the database and then run the command `yarn bootstrap` in the root of the repository.
 
 # running
 
-- you need to run `yarn compose:all` in root of repository
+- You need to run `yarn compose:all` in the root of the repository.

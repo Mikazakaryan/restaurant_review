@@ -5,8 +5,8 @@ const userSessionMiddleware = require("./middlewares/userSession");
 
 const router = createRouter();
 
-module.context.use(router);
 module.context.use(userSessionMiddleware);
+module.context.use(router);
 
 routes(router);
 

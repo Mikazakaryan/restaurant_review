@@ -13,8 +13,8 @@
     "concurrently": "^5.1.0"
   },
   "scripts": {
-    "bootstrap": "concurrently -n \"DB-server,auth-service,restaurant-service\" \"foxx server set toptal http://localhost:8529/ --database toptal\" \"cd auth_foxx && foxx install --server toptal --database toptal /auth\" \"cd restaurant_foxx && foxx install --server toptal --database toptal /restaurant\"",
-    "upgrade:servers": "concurrently -n \"auth-service,restaurant-service\" \"cd auth_foxx && foxx upgrade --server toptal --database toptal /auth\" \"cd restaurant_foxx && foxx upgrade --server toptal --database toptal /restaurant\"",
+    "bootstrap": "concurrently -n \"DB-server,user-service,auth-service,restaurant-service,rete-service,reply-service\" \"foxx server set toptal http://localhost:8529/ --database toptal\" \"cd user_foxx && npm i && foxx install --server toptal --database toptal /user\" \"cd auth_foxx && npm i && foxx install --server toptal --database toptal /auth\" \"cd restaurant_foxx && npm i && foxx install --server toptal --database toptal /restaurant\" \"cd rate_foxx && npm i && foxx install --server toptal --database toptal /rate\" \"cd reply_foxx && npm i && foxx install --server toptal --database toptal /reply\"",
+    "upgrade:servers": "concurrently -n \"auth-service,user-service,restaurant-service,rete-service,reply-service\" \"cd auth_foxx && npm i && foxx upgrade --server toptal --database toptal /auth\" \"cd user_foxx && npm i && foxx upgrade --server toptal --database toptal /user\" \"cd restaurant_foxx && npm i && foxx upgrade --server toptal --database toptal /restaurant\" \"cd rate_foxx && npm i && foxx upgrade --server toptal --database toptal /rate\" \"cd reply_foxx && npm i && foxx upgrade --server toptal --database toptal /reply\"",
     "compose:all": "concurrently -n \"db, backend,frontend,\" \"/usr/local/Cellar/arangodb/3.6.2_1/sbin/arangod -c $HOME/Library/ArangoDB-etc/arangod.conf --http.trusted-origin '*'\" \"cd backend && yarn start\" \"cd frontend && yarn start\""
   }
 }

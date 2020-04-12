@@ -11,6 +11,9 @@ const App = express();
 
 App.use(corsMiddleware)
   .all('/auth/*', proxyMiddleware)
+  .all('/user/*', proxyMiddleware)
+  .all('/rate/*', proxyMiddleware)
+  .all('/reply/*', proxyMiddleware)
   .all('/restaurant/*', proxyMiddleware)
   .all('/*', (_req, res) => {
     res.status(404).json({
