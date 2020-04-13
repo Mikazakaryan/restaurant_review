@@ -33,9 +33,9 @@ const getAll = (userId) =>
             RETURN vertex
         ),
       '_id'),
-      lowestRate: LAST(ratings),
-      highestRate: FIRST(ratings),
-      rating: SUM(ratings) / LENGTH(ratings)
+      rating: AVG(ratings),
+      lowestRate: MIN(ratings),
+      highestRate: MAX(ratings)
     })
   `.toArray();
 

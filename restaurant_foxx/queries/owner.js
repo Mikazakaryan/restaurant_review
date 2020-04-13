@@ -26,9 +26,9 @@ const getAll = (userId) =>
               )
             })
         ),
-        lowestRate: LAST(ratings),
-        highestRate: FIRST(ratings),
-        rating: SUM(ratings) / LENGTH(ratings)
+        rating: AVG(ratings),
+        lowestRate: MIN(ratings),
+        highestRate: MAX(ratings)
       })
   `.toArray();
 

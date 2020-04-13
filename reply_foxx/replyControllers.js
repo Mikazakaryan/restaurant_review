@@ -2,6 +2,8 @@ const db = require("@arangodb").db;
 const query = require("@arangodb").query;
 
 const ReplyCollection = db._collection("replies");
+const HasRepliedEdge = db._collection("has_replied");
+const RepliedForEdge = db._collection("replied_for");
 
 const getAll = () =>
   query`
@@ -16,17 +18,17 @@ const getAll = () =>
   `.toArray();
 
 const create = ({ body: { id, text }, currentUser: { _id: userId } }) => {
-  const reply = db._collection("replies").insert({
+  const reply = ReplyCollection.insert({
     text,
     active: true,
   });
 
-  db._collection("has_replied").insert({
+  HasRepliedEdge.insert({
     _from: userId,
     _to: reply._id,
   });
 
-  db._collection("replied_for").insert({
+  RepliedForEdge.insert({
     _from: reply._id,
     _to: `rates/${id}`,
   });

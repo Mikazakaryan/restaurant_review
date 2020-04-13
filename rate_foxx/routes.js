@@ -2,12 +2,11 @@ const joi = require("joi");
 
 const Serializer = require("./serializers");
 const rateController = require("./rateControllers");
-const isUserMiddleware = require("./middlewares/isUser");
-const isAdminMiddleware = require("./middlewares/isAdmin");
+const checkUserRole = require("./middlewares/checkUserRole");
 
 module.exports = (router) => {
   router
-    .get("/", isAdminMiddleware, (req, res) => {
+    .get("/", checkUserRole("isAdmin"), (req, res) => {
       const data = rateController.getAll(req);
       const serializedData = Serializer.serialize("rate", data);
 
@@ -18,7 +17,7 @@ module.exports = (router) => {
     .description("get all rates");
 
   router
-    .post("/", isUserMiddleware, (req, res) => {
+    .post("/", checkUserRole("isUser"), (req, res) => {
       const restaurants = rateController.create(req);
       const serializedRestaurants = Serializer.serialize("rate", restaurants);
       res.send(serializedRestaurants);
@@ -26,10 +25,10 @@ module.exports = (router) => {
     .body(
       joi
         .object({
-          date: joi.string().required(),
-          rating: joi.number().required(),
+          date: joi.date().required(),
           comment: joi.string().required(),
           restaurantKey: joi.string().required(),
+          rating: joi.number().integer().min(0).max(5).required(),
         })
         .required(),
       "rate restaurant"
@@ -38,7 +37,7 @@ module.exports = (router) => {
     .summary("rate restaurant")
     .description("rate restaurant by user id and count new rating");
 
-  router.all("*", isAdminMiddleware);
+  router.all("*", checkUserRole("isAdmin"));
 
   router
     .put("/:id", (req, res) => {
@@ -49,9 +48,9 @@ module.exports = (router) => {
     .body(
       joi
         .object({
-          date: joi.string().required(),
-          rating: joi.number().required(),
+          date: joi.date().required(),
           comment: joi.string().required(),
+          rating: joi.number().integer().min(0).max(5).required(),
         })
         .required(),
       "edit rate"

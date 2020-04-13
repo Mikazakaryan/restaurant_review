@@ -4,23 +4,35 @@ const auth = createAuth();
 
 const users = module.context.collection("users");
 
-const signup = ({ role, username, password }, req) => {
-  const user = {
-    role,
-    username,
-    active: true,
-    passwordData: auth.create(password),
-  };
+const signup = (req, res) => {
+  try {
+    const {
+      body: { role, username, password },
+    } = req;
 
-  const meta = users.save(user);
+    const user = {
+      role,
+      username,
+      active: true,
+      passwordData: auth.create(password),
+    };
 
-  const userWithMeta = { ...user, ...meta };
+    const meta = users.save(user);
 
-  req.session.uid = userWithMeta._key;
-  req.sessionStorage.save(req.session);
+    const userWithMeta = { ...user, ...meta };
+
+    req.session.uid = userWithMeta._key;
+    req.sessionStorage.save(req.session);
+  } catch (e) {
+    return res.throw("bad request", "Username already taken", e);
+  }
 };
 
-const login = ({ username, password }, req, res) => {
+const login = (req, res) => {
+  const {
+    body: { username, password },
+  } = req;
+
   const user = users.firstExample({ username });
   if (!user) return res.throw(400, "Wrong Inputs");
 
@@ -33,7 +45,11 @@ const login = ({ username, password }, req, res) => {
 };
 
 const logout = (req) => {
-  req.sessionStorage.clear(req.session);
+  try {
+    req.sessionStorage.clear(req.session);
+  } catch (error) {
+    console.debug(`No valid session was found: ${req.session}`);
+  }
 };
 
 module.exports = {

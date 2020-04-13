@@ -1,13 +1,12 @@
 const joi = require("joi");
 
 const Serializer = require("./serializers");
-const isOwnerMiddleware = require("./middlewares/isOwner");
-const isAdminMiddleware = require("./middlewares/isAdmin");
 const replyController = require("./replyControllers");
+const checkUserRole = require("./middlewares/checkUserRole");
 
 module.exports = (router) => {
   router
-    .get("/", isAdminMiddleware, (req, res) => {
+    .get("/", checkUserRole("isAdmin"), (req, res) => {
       const data = replyController.getAll(req);
       const serializedData = Serializer.serialize("reply", data);
 
@@ -18,7 +17,7 @@ module.exports = (router) => {
     .description("get all replies");
 
   router
-    .post("/", isOwnerMiddleware, (req, res) => {
+    .post("/", checkUserRole("isOwner"), (req, res) => {
       const Data = replyController.create(req);
       const serializedData = Serializer.serialize("reply", Data);
 
@@ -37,7 +36,7 @@ module.exports = (router) => {
     .summary("reply to rate")
     .description("reply to rate by user id");
 
-  router.all("*", isAdminMiddleware);
+  router.all("*", checkUserRole("isAdmin"));
 
   router
     .put("/:id", (req, res) => {

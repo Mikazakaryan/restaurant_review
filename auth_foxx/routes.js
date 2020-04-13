@@ -1,12 +1,11 @@
 const joi = require("joi");
 
-const SessionController = require("./sessionController");
+const sessionController = require("./sessionController");
 
 module.exports = (router) => {
   router
     .post("/login", (req, res) => {
-      SessionController.login(req.body, req, res);
-
+      sessionController.login(req, res);
       res.send({ success: true });
     })
     .body(
@@ -23,15 +22,9 @@ module.exports = (router) => {
     .description("Login with existing user");
 
   router
-    .post("/signup", function (req, res) {
-      try {
-        SessionController.signup(req.body, req, res);
-        res.send({ success: true });
-      } catch (e) {
-        // Failed to save the user
-        // We'll assume the uniqueness constraint has been violated
-        res.throw("bad request", "Username already taken", e);
-      }
+    .post("/signup", (req, res) => {
+      sessionController.signup(req, res);
+      res.send({ success: true });
     })
     .body(
       joi
@@ -48,13 +41,8 @@ module.exports = (router) => {
     .description("Creates a new user and and log in");
 
   router
-    .post("/logout", function (req, res) {
-      try {
-        SessionController.logout(req);
-      } catch (error) {
-        console.debug(`No valid session was found: ${req.session}`);
-      }
-
+    .post("/logout", (req, res) => {
+      sessionController.logout(req);
       res.send({ success: true });
     })
     .response(joi.object().required(), "status")

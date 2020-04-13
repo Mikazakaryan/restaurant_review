@@ -2,14 +2,8 @@
 
 const db = require("@arangodb").db;
 
-const collections = [
-  "rates",
-  "replies",
-  "auth_users",
-  "restaurants",
-  "auth_sessions",
-];
-const edges = ["hasRated", "isOwn", "belongsTo", "hasReplied", "repliedFor"];
+const collections = ["replies"];
+const edges = ["hasReplied", "repliedFor"];
 
 collections.forEach((collectionName) => {
   if (!db._collection(collectionName))

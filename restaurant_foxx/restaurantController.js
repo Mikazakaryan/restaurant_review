@@ -4,18 +4,19 @@ const adminQueries = require("./queries/admin");
 const ownerQueries = require("./queries/owner");
 const userQueries = require("./queries/user");
 
+const IsOwnEdge = db._collection("is_own");
 const RestaurantsCollection = db._collection("restaurants");
 
 const getAll = ({ currentUser: user }) => {
   if (user.isAdmin) {
-    return [adminQueries.getAll(), "restaurant"];
+    return adminQueries.getAll();
   }
 
   if (user.isOwner) {
-    return [ownerQueries.getAll(user._id), "ownerRestaurantList"];
+    return ownerQueries.getAll(user._id);
   }
 
-  return [userQueries.getAll(user._id), "userRestaurantList"];
+  return userQueries.getAll(user._id);
 };
 
 const create = ({ currentUser: { _id: userId }, body: { name } }) => {
@@ -24,7 +25,7 @@ const create = ({ currentUser: { _id: userId }, body: { name } }) => {
     active: true,
   });
 
-  const newCollection = db._collection("is_own").insert({
+  const newCollection = IsOwnEdge.insert({
     _from: userId,
     _to: document._id,
   });

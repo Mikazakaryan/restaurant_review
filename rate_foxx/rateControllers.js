@@ -2,6 +2,8 @@ const db = require("@arangodb").db;
 const query = require("@arangodb").query;
 
 const RatesCollection = db._collection("rates");
+const HasRatedEdge = db._collection("has_rated");
+const BelongsToEdge = db._collection("belongs_to");
 
 const getAll = () =>
   query`
@@ -21,19 +23,19 @@ const create = ({
 }) => {
   const restaurantId = `restaurants/${restaurantKey}`;
 
-  const rate = db._collection("rates").insert({
+  const rate = RatesCollection.insert({
     date,
     rating,
     comment,
     active: true,
   });
 
-  db._collection("belongs_to").insert({
+  BelongsToEdge.insert({
     _from: rate._id,
     _to: restaurantId,
   });
 
-  db._collection("has_rated").insert({
+  HasRatedEdge.insert({
     _to: rate._id,
     _from: userId,
   });

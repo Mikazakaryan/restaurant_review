@@ -2,28 +2,24 @@ const joi = require("joi");
 
 const Serializer = require("./serializers");
 const UserController = require("./userController");
-const isAdminMiddleware = require("./middlewares/isAdmin");
+const checkUserRole = require("./middlewares/checkUserRole");
 
 module.exports = (router) => {
   router
-    .get("/whoami", function (req, res) {
-      try {
-        const user = UserController.whoami(req);
+    .get("/whoami", (req, res) => {
+      const user = UserController.whoami(req);
 
-        const serializedUser = Serializer.serialize("user", user);
-        res.send(serializedUser);
-      } catch (e) {
-        res.send({ user: null });
-      }
+      const serializedUser = Serializer.serialize("user", user);
+      res.send(serializedUser);
     })
     .response(joi.object().required(), "user object")
     .summary("whoami")
     .description("Returns the currently active user.");
 
-  router.all("*", isAdminMiddleware);
+  router.all("*", checkUserRole("isAdmin"));
 
   router
-    .get("/all", (_req, res) => {
+    .get("/", (_req, res) => {
       const users = UserController.getAll();
 
       const serializedUsers = Serializer.serialize("user", users);

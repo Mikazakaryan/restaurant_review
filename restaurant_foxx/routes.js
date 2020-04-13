@@ -1,15 +1,14 @@
 const joi = require("joi");
 
 const Serializer = require("./serializers");
-const isAdminMiddleware = require("./middlewares/isAdmin");
-const isOwnerMiddleware = require("./middlewares/isOwner");
+const checkUserRole = require("./middlewares/checkUserRole");
 const restaurantController = require("./restaurantController");
 
 module.exports = (router) => {
   router
     .get("/", (req, res) => {
-      const [data, serializerType] = restaurantController.getAll(req);
-      const serializedData = Serializer.serialize(serializerType, data);
+      const data = restaurantController.getAll(req);
+      const serializedData = Serializer.serialize("restaurant", data);
 
       res.send(serializedData);
     })
@@ -18,7 +17,7 @@ module.exports = (router) => {
     .description("get all restaurants");
 
   router
-    .post("/", isOwnerMiddleware, (req, res) => {
+    .post("/", checkUserRole("isOwner"), (req, res) => {
       const restaurants = restaurantController.create(req);
       const serializedRestaurants = Serializer.serialize(
         "ownerRestaurantList",
@@ -39,7 +38,7 @@ module.exports = (router) => {
     .summary("create restaurant")
     .description("create restaurant by user id");
 
-  router.all("*", isAdminMiddleware);
+  router.all("*", checkUserRole("isAdmin"));
 
   router
     .put("/:id", (req, res) => {
